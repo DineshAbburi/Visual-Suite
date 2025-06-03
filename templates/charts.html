@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/charts.css') }}">
+    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+        <div class="nav">
+            <a href="/dashboard" class="dropbtn-text">Dashboard</a>
+            <div class="dropdown" id="preprocessing-dropdown">
+                <span class="dropbtn-text">Pre-Processing</span>
+                <div class="dropdown-content">
+                    <a href="/transformations">Feature Engineering</a>
+                    <a href="/duplicates/">Duplicates</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Visualize</span>
+                <div class="dropdown-content">
+                    <a href="/describe">Describe</a>
+                    <a href="/missingvalue/">Missing Analysis</a>
+                    <a href="/correlationmatrix/">Co-Relations</a>
+                    <a href="/charts">Charts</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Regression</span>
+                <div class="dropdown-content">
+                    <a href="/regression">Regression Models</a>
+                    <a href="/comparativeanalysis">Comparitive Analysis</a>
+                    <a href="/featureimportance">Feature Importance</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Report</span>
+                <div class="dropdown-content">
+                    <a href="/download_report">Generate Report</a>
+                    <a href="{{ url_for('export_data') }}">Export Data</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Settings</span>
+                <div class="dropdown-content">
+                    <!-- <a href="#">User Settings</a> -->
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Create Chart</h1>
+        <form id="chartForm" method="POST">
+            <div class="select-container">
+                <label for="x_axis">X Axis:</label>
+                <select name="x_axis" id="x_axis">
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="select-container">
+                <label for="y_axis">Y Axis:</label>
+                <select name="y_axis" id="y_axis">
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div class="radio-container">
+                <span>Chart Type:</span>
+                <div class="radio-block">
+                    <input type="radio" id="line" name="chart_type" value="line">
+                    <label for="line">Line Chart</label>
+                    <input type="radio" id="bar" name="chart_type" value="bar">
+                    <label for="bar">Bar Chart</label>
+                    <input type="radio" id="scatter" name="chart_type" value="scatter">
+                    <label for="scatter">Scatter Plot</label>
+                    <input type="radio" id="heatmap" name="chart_type" value="heatmap">
+                    <label for="heatmap">Heat Map</label>
+                </div>
+            </div>
+        </form>
+        <h1>Chart:</h1>
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        document.getElementById('x_axis').addEventListener('change', updateChart);
+        document.getElementById('y_axis').addEventListener('change', updateChart);
+
+        document.querySelectorAll('input[name="chart_type"]').forEach(radio => {
+            radio.addEventListener('change', updateChart);
+        });
+
+        function updateChart() {
+            const xAxis = document.getElementById('x_axis').value;
+            const yAxis = document.getElementById('y_axis').value;
+            const chartType = document.querySelector('input[name="chart_type"]:checked')?.value;
+
+            if (!xAxis || !yAxis || !chartType) {
+                return; // Do nothing if any value is not selected
+            }
+
+            fetch('/generate_chart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    x_axis: xAxis,
+                    y_axis: yAxis,
+                    chart_type: chartType
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    const chartDiv = document.getElementById('chart');
+                    Plotly.newPlot(chartDiv, JSON.parse(data.data));
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while generating the chart.');
+                });
+        }
+    </script>
+</body>
+
+</html>

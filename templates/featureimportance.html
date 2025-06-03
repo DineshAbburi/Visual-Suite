@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feature Importance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/companalysis.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+        <div class="nav">
+            <a href="/dashboard" class="dropbtn-text">Dashboard</a>
+            <div class="dropdown" id="preprocessing-dropdown">
+                <span class="dropbtn-text">Pre-Processing</span>
+                <div class="dropdown-content">
+                    <a href="/transformations">Feature Engineering</a>
+                    <a href="/duplicates/">Duplicates</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Visualize</span>
+                <div class="dropdown-content">
+                    <a href="/describe">Describe</a>
+                    <a href="/missingvalue/">Missing Analysis</a>
+                    <a href="/correlationmatrix/">Co-Relations</a>
+                    <a href="/charts">Charts</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Regression</span>
+                <div class="dropdown-content">
+                    <a href="/regression">Regression Models</a>
+                    <a href="/comparativeanalysis">Comparitive Analysis</a>
+                    <a href="/featureimportance">Feature Importance</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Report</span>
+                <div class="dropdown-content">
+                    <a href="/download_report">Generate Report</a>
+                    <a href="{{ url_for('export_data') }}">Export Data</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Settings</span>
+                <div class="dropdown-content">
+                    <!-- <a href="#">User Settings</a> -->
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="container">
+        <h1>Feature Importance</h1>
+        <form id="feature-importance-form" method="POST">
+            <div class="form-group">
+                <label for="target_column">Select Target Column:</label>
+                <select id="target_column" name="target_column" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="model_type">Select Model Type:</label>
+                <select id="model_type" name="model_type" required>
+                    <option value="random_forest">Random Forest Regressor</option>
+                    <option value="linear_regression">Linear Regressor</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Compute Feature Importance</button>
+        </form>
+
+        {% if feature_importances_html %}
+        <div class="table-responsive">
+            {{ feature_importances_html|safe }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

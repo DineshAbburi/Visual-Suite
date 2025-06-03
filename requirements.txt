@@ -1,0 +1,11 @@
+Flask
+pandas
+plotly
+mysql-connector-python
+python-dotenv
+scikit-learn
+scipy
+numpy
+pycaret
+lightgbm
+dash

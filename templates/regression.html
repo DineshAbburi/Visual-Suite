@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Regression Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regression.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css">
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/js/multi-select-tag.js"></script>
+</head>
+
+<body>
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+        <div class="nav">
+            <a href="/dashboard" class="dropbtn-text">Dashboard</a>
+            <div class="dropdown" id="preprocessing-dropdown">
+                <span class="dropbtn-text">Pre-Processing</span>
+                <div class="dropdown-content">
+                    <a href="/transformations">Feature Engineering</a>
+                    <a href="/duplicates/">Duplicates</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Visualize</span>
+                <div class="dropdown-content">
+                    <a href="/describe">Describe</a>
+                    <a href="/missingvalue/">Missing Analysis</a>
+                    <a href="/correlationmatrix/">Co-Relations</a>
+                    <a href="/charts">Charts</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Regression</span>
+                <div class="dropdown-content">
+                    <a href="/regression">Regression Models</a>
+                    <a href="/comparativeanalysis">Comparitive Analysis</a>
+                    <a href="/featureimportance">Feature Importance</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Report</span>
+                <div class="dropdown-content">
+                    <a href="/download_report">Generate Report</a>
+                    <a href="{{ url_for('export_data') }}">Export Data</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Settings</span>
+                <div class="dropdown-content">
+                    <!-- <a href="#">User Settings</a> -->
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="form-container">
+            <h1>Run Regression Analysis</h1>
+            <form id="regression-form">
+                <label for="dependent_variable">Dependent Variable:</label>
+                <select id="dependent_variable" name="dependent_variable">
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="independent_variable">Choose columns:</label>
+                <select id="independent_variable" name="independent_variable" multiple>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="regression_model">Select Regression Model:</label>
+                <select id="regression_model" name="regression_model">
+                    <option value="linear_regression">Linear Regression</option>
+                    <option value="decision_tree">Decision Tree Regressor</option>
+                    <option value="random_forest">Random Forest Regressor</option>
+                    <option value="adaboost">AdaBoost Regressor</option>
+                    <option value="bagging">Bagging Regressor</option>
+                    <option value="gradient_boosting">Gradient Boosting Regressor</option>
+                    <option value="lightgbm">LightGBM Regressor</option>
+                </select>
+
+                <button type="submit">Run Regression</button>
+            </form>
+            <script>
+                new MultiSelectTag('independent_variable'); // Initialize the multi-select tag
+            </script>
+            <div id="regression-result" style="margin-top: 20px;"></div>
+        </div>
+        <div class="visualization-container">
+            <div class="radio-block" id="chart-options" style="display: none;">
+                <input type="radio" id="pairplot" name="chart_type" value="pairplot" checked>
+                <label for="pairplot">Pair Plot</label>
+
+                <input type="radio" id="heatmap" name="chart_type" value="heatmap">
+                <label for="heatmap">Heatmap</label>
+            </div>
+            <div class="chart-container">
+                <div id="pair-plot" class="active" style="display: none;"></div>
+                <div id="correlation-heatmap" style="display: none;"></div>
+                <div id="regression-plot" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="prediction-container">
+        <h1>Predict Dependent Variable</h1>
+        <form id="prediction-form">
+            <label for="prediction_column">Select Dependent Variable:</label>
+            <select id="prediction_column" name="prediction_column">
+                {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="independent_columns">Select Independent Variables:</label>
+            <select id="independent_columns" name="independent_columns" multiple>
+                {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="prediction_input">Enter Independent Variables(Comma-Sperated):</label>
+            <input type="text" id="prediction_input" name="prediction_input" placeholder="e.g. 5.1,3.5,1.4,0.2">
+
+            <button type="submit">Predict</button>
+        </form>
+        <div id="prediction-result" class="prediction-results">
+            <!-- Placeholder for prediction results -->
+        </div>
+        <script>
+            new MultiSelectTag('independent_columns'); // Initialize the multi-select tag
+
+            document.getElementById('prediction-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('prediction-result').innerHTML = `<div class="result-item">${data.error}</div>`;
+                    } else {
+                        // Construct HTML for prediction results
+                        let resultHTML = `
+                            <div class="result-item">Predicted Value: ${data.prediction}</div>
+                            <div class="result-item">R-squared: ${data.r2.toFixed(4)}</div>
+                            <div class="result-item">Mean Squared Error (MSE): ${data.mse.toFixed(4)}</div>
+                            <div class="result-item">Root Mean Squared Error (RMSE): ${data.rmse.toFixed(4)}</div>
+                            <div class="result-item">Mean Absolute Percentage Error (MAPE): ${data.mape.toFixed(4)}</div>
+                        `;
+                        document.getElementById('prediction-result').innerHTML = resultHTML;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        </script>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function fetchDataAndPlot(formData) {
+                fetch('/run_regression', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('regression-result').innerText = data.error;
+                    } else {
+                        if (data.intercept !== undefined && data.coefficients !== undefined) {
+                            document.getElementById('regression-result').innerText = `Intercept: ${data.intercept}, Coefficients: ${JSON.stringify(data.coefficients)}`;
+                        } else if (data.feature_importances !== undefined) {
+                            document.getElementById('regression-result').innerText = `Feature Importances: ${JSON.stringify(data.feature_importances)}`;
+                        }
+
+                        // Clear previous plots
+                        Plotly.purge('regression-plot');
+                        Plotly.purge('pair-plot');
+                        Plotly.purge('correlation-heatmap');
+
+                        // Determine which plot to display based on the number of selected independent variables
+                        const independentVariablesCount = formData.getAll('independent_variable').length;
+                        if (independentVariablesCount === 1) {
+                            document.getElementById('regression-plot').style.display = 'block';
+                            document.getElementById('pair-plot').style.display = 'none';
+                            document.getElementById('correlation-heatmap').style.display = 'none';
+                            document.getElementById('chart-options').style.display = 'none';
+
+                            Plotly.newPlot('regression-plot', data.plot_data.data, data.plot_data.layout);
+                        } else if (independentVariablesCount > 1) {
+                            document.getElementById('regression-plot').style.display = 'none';
+                            document.getElementById('chart-options').style.display = 'block';
+
+                            const chartType = document.querySelector('input[name="chart_type"]:checked').value;
+                            if (chartType === 'pairplot') {
+                                document.getElementById('pair-plot').style.display = 'block';
+                                document.getElementById('correlation-heatmap').style.display = 'none';
+                                Plotly.newPlot('pair-plot', data.pair_plot_data.data, data.pair_plot_data.layout);
+                            } else if (chartType === 'heatmap') {
+                                document.getElementById('pair-plot').style.display = 'none';
+                                document.getElementById('correlation-heatmap').style.display = 'block';
+                                Plotly.newPlot('correlation-heatmap', data.correlation_heatmap_data.data, data.correlation_heatmap_data.layout);
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            const initialFormData = new FormData(document.getElementById('regression-form'));
+            fetchDataAndPlot(initialFormData);
+
+            document.getElementById('regression-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                fetchDataAndPlot(formData);
+            });
+
+            document.querySelectorAll('input[name="chart_type"]').forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    const formData = new FormData(document.getElementById('regression-form'));
+                    fetchDataAndPlot(formData);
+                });
+            });
+
+            document.getElementById('independent_variable').addEventListener('change', function () {
+                const selectedOptions = this.selectedOptions;
+                const chartOptions = document.getElementById('chart-options');
+
+                if (selectedOptions.length > 1) {
+                    chartOptions.style.display = 'block';
+                } else {
+                    chartOptions.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

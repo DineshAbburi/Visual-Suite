@@ -1,0 +1,282 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #ffffff; /* White text */
+    font-size: 14px;
+  }
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333333;
+    /* Dark background */
+    padding: 15px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* z-index: 1000; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar a {
+    color: #ffffff; /* White links */
+  }
+  
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 50px;
+  }
+  
+  .navbar img {
+    max-width: 50px;
+    height: auto;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropbtn-text {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 5px;
+  }
+  
+  .dropbtn-text::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #FFB400; /* Ernst and Young yellow */
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+    z-index: 1;
+  }
+  
+  .dropbtn-text:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2a2a2a; /* Dark grey dropdown background */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    border-radius: 8px;
+    top: 100%;
+    margin-top: 5px;
+  }
+  
+  .dropdown-content a {
+    color: #ffffff; /* White dropdown text */
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s ease;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #333333; /* Darker grey on hover */
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    padding-top: 80px;
+  }
+
+.container.full-width {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.container-title {
+    color: #ffffff;
+    margin-bottom: 15px; /* Reduced margin */
+    font-size: 20px; /* Reduced font-size */
+    font-weight: 500;
+}
+
+.input-section {
+    margin-bottom: 15px; /* Reduced margin */
+    padding: 15px; /* Reduced padding */
+    background-color: #333333; /* Dark grey input background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.output-section {
+    margin-top: 20px; /* Reduced margin */
+}
+
+.radio-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px; /* Reduced margin */
+}
+
+.radio-container input[type="radio"] {
+    display: none;
+}
+
+.radio-container label {
+    display: inline-block;
+    padding: 6px 12px; /* Reduced padding */
+    background-color: #333333; /* Dark grey radio background */
+    color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 5px; /* Reduced margin */
+}
+
+.radio-container input[type="radio"]:checked + label {
+    background-color: #FFB400; /* Yellow selected background */
+    border-color: #FFB400; /* Yellow selected border */
+    color: #212121;
+}
+
+#remove-options {
+    margin-top: 5px; /* Reduced margin */
+}
+
+.select-container {
+    margin-bottom: 15px; /* Reduced margin */
+    text-align: left;
+}
+
+.select-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.select-container select {
+    width: 100%;
+    padding: 8px; /* Reduced padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333333; /* Dark grey select background */
+    color: #ffffff;
+    font-size: 14px; /* Reduced font-size */
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 8px; /* Reduced padding */
+    border: none;
+    border-radius: 5px;
+    background-color: #FFB400; /* Yellow button background */
+    color: #212121;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #ffb400;
+}
+
+.output-container {
+    background-color: #333333; /* Dark grey output background */
+    color: #ffffff;
+    padding: 15px; /* Reduced padding */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    text-align: left;
+}
+
+.output-container h3 {
+    margin-top: 0;
+    font-size: 16px; /* Reduced font-size */
+    font-weight: 500;
+}
+
+.output-container ul {
+    padding-left: 15px; /* Reduced padding */
+}
+
+.output-container ul li {
+    list-style-type: none;
+    margin-bottom: 5px; /* Reduced margin */
+}
+
+.data-table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px; /* Reduced margin */
+}
+
+.data-table th, .data-table td {
+    padding: 6px; /* Reduced padding */
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #212121;
+    color: #fff;
+}
+
+.data-table td {
+    background-color: #333333; /* Dark grey table cell background */
+    color: #ffffff;
+}
+
+.data-table tr:nth-child(even) td {
+    background-color: #262626; /* Dark grey alternate table row */
+}
+
+/* Updated styles for displaying duplicates in two columns */
+.duplicate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Two columns */
+    gap: 5px; /* Reduced gap */
+}
+
+.duplicate-item {
+    padding: 5px;
+}
+
+@media (max-width: 768px) {
+    .duplicate-grid {
+        grid-template-columns: 1fr;
+    }
+}

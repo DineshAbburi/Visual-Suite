@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EY Visual Suite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dataPreview.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+
+<body onload="refresh()">
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+
+        <div class="nav">
+            <h2>EDA Visualization Suite</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="upload-container" id="upload-container">
+            <h2>Upload a File</h2>
+            <input type="file" name="file" id="file" accept=".csv" required>
+        </div>
+        <a id="continue-link" style="display: none;">Continue with this Dataset <span>&rarr;</span></a>
+        <div class="data-preview" id="data-preview" style="display: none;">
+            <div class="data-preview-container" id="data-preview-container">
+                <!-- Data preview will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#file').on('change', function () {
+                var fileInput = this;
+                if (fileInput.files && fileInput.files[0]) {
+                    var formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+
+                    $.ajax({
+                        url: '/upload',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.error) {
+                                alert(response.error);
+                            } else {
+                                $('#data-preview-container').html('<h2>Data Preview - ' + response.filename + '</h2>' + response.full_table);
+                                $('#data-preview').show();
+                                $('#continue-link').show(); // Show the link after successful upload
+                            }
+                        },
+                        error: function () {
+                            alert('An error occurred while uploading the file.');
+                        }
+                    });
+                }
+            });
+
+            $('#continue-link').on('click', function (event) {
+                event.preventDefault(); // Prevent default link behavior
+                window.location.href = '/dashboard';
+            });
+        });
+        window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}
+    </script>
+
+</body>
+
+</html>

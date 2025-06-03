@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <script src="{{ url_for('static', filename='js/PasswordError.js') }}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <!-- <img src="{{ url_for('static', filename='/images/heading.png') }}" alt="Logo" id="logo-image"> -->
+        </div>
+        <h1>EDA Visualization Suite</h1>
+    </nav>
+    <div class="register-container">
+        <div class="border">
+            <div class="header">
+                <h1 class="word">Register</h1>
+            </div>
+            <h2 class="word">
+                <form action="{{ url_for('register') }}" method="post" onsubmit="return validateForm()">
+                    <div id="msg" class="msg">{{ msg }}</div>
+                    <input id="username" name="username" type="text" placeholder="Enter Your Username"
+                        class="textbox" /><br><br>
+                    <input id="email" name="email" type="text" placeholder="Enter Your Email ID"
+                        class="textbox" /><br><br>
+                    <input id="password" name="password" type="password" placeholder="Enter Your Password"
+                        class="textbox" /><br><br>
+                    <input id="re_password" name="re_password" type="password" placeholder="Re-enter Your Password"
+                        class="textbox" /><br><br>
+                    <input type="submit" class="btn" value="Sign Up"><br>
+                </form>
+            </h2>
+            <p class="bottom">Already have an account? <a class="bottom" href="{{url_for('login')}}"> Sign In here</a>
+            </p>
+        </div>
+    </div>
+    <!-- <footer>
+        <p>&copy; 2024 EY. All rights reserved.</p>
+    </footer> --> 
+</body>
+
+</html>

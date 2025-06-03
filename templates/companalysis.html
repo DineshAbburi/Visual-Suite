@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparative Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/companalysis.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+        <div class="nav">
+            <a href="/dashboard" class="dropbtn-text">Dashboard</a>
+            <div class="dropdown" id="preprocessing-dropdown">
+                <span class="dropbtn-text">Pre-Processing</span>
+                <div class="dropdown-content">
+                    <a href="/transformations">Feature Engineering</a>
+                    <a href="/duplicates/">Duplicates</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Visualize</span>
+                <div class="dropdown-content">
+                    <a href="/describe">Describe</a>
+                    <a href="/missingvalue/">Missing Analysis</a>
+                    <a href="/correlationmatrix/">Co-Relations</a>
+                    <a href="/charts">Charts</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Regression</span>
+                <div class="dropdown-content">
+                    <a href="/regression">Regression Models</a>
+                    <a href="/comparativeanalysis">Comparitive Analysis</a>
+                    <a href="/featureimportance">Feature Importance</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Report</span>
+                <div class="dropdown-content">
+                    <a href="/download_report">Generate Report</a>
+                    <a href="{{ url_for('export_data') }}">Export Data</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Settings</span>
+                <div class="dropdown-content">
+                    <!-- <a href="#">User Settings</a> -->
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Comparative Analysis</h1>
+        <form id="analysis-form" method="POST">
+            <div class="form-group">
+                <label for="target_column">Select Target Column:</label>
+                <select id="target_column" name="target_column" class="" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}" {% if column == target_column %}selected{% endif %}>{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Run Comparative Analysis</button>
+        </form>
+
+        {% if target_column %}
+        <div class="table-responsive">
+            {{ results_html|safe }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

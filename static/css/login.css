@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #1c1c1c; 
+    color: #ffffff; /* Light text for contrast */
+}
+
+.navbar {
+    width: 100%;
+    background-color: #333333; /* Dark background for navbar */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar img {
+    max-width: 80px; 
+    height: auto;
+}
+
+.navbar h1 {
+    font-size: 30px;
+    color: #ffffff; /* Gold text -ffd700 */
+    margin: 0;
+    margin-right: 70px;
+}
+
+.container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    padding: 80px 20px 20px; 
+}
+
+.header {
+    text-align: center;
+}
+ /* Light text for contrast */
+.header img {
+    max-width: 90px; /* Smaller logo size */
+    height: auto;
+    margin-bottom: 20px;
+    margin-left: 100px;
+}
+
+.login-container {
+    background-color: #333333; 
+    padding: 40px;
+    border-radius: 15px; 
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border: 1px solid #444444; 
+    max-width: 400px; 
+    width: 100%;
+}
+
+.login-container h2 {
+    margin: 0 0 20px 0;
+    font-size: 26px;
+    color: #ffd700; /* Gold color for headings */
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: calc(100% - 20px); /* Take up 100% width minus padding */
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #555555; /* Slightly darker grey border */
+    border-radius: 5px;
+    background-color: #222222; /* Dark background for inputs */
+    color: #ffffff; /* White text for inputs */
+}
+
+.login-container input[type="submit"] {
+    margin-top: 20px;
+    background-color: #ffd700; /* Gold background */
+    color: #1c1c1c; /* Dark text */
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: #e6b800; 
+}
+
+.login-container a {
+    display: block;
+    margin-top: 20px;
+    color: #ffd700; /* Gold text */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #1c1c1c; /* Dark background */
+    color: #ffffff; /* Light text */
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+footer p {
+    margin: 0;
+}

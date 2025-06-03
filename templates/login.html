@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <!-- <img src="{{ url_for('static', filename='/images/heading.png') }}" alt="Logo" id="logo-image"> --> 
+        </div>
+        <h1>EDA Visualization Suite</h1>
+    </nav>
+    <div class="container">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form action="{{ url_for('login') }}" method="post">
+                <div class="msg">{{ msg }}</div>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="submit" value="Login">
+            </form>
+            <a href="{{url_for('register')}}">Not a user? Register</a>
+        </div>
+    </div>
+    <!--<footer>
+        <p>&copy; 2024 EY. All rights reserved.</p>
+    </footer> --> 
+</body>
+
+</html>
+
+
+<!--  to comment  -->
+  

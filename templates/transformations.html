@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprocess Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/transformations.css') }}">
+    <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <!-- <img src="{{ url_for('static', filename='images/heading.png') }}" alt="Header Image" id="header-image"> -->
+        <div class="nav">
+            <a href="/dashboard" class="dropbtn-text">Dashboard</a>
+            <div class="dropdown" id="preprocessing-dropdown">
+                <span class="dropbtn-text">Pre-Processing</span>
+                <div class="dropdown-content">
+                    <a href="/transformations">Feature Engineering</a>
+                    <a href="/duplicates/">Duplicates</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Visualize</span>
+                <div class="dropdown-content">
+                    <a href="/describe">Describe</a>
+                    <a href="/missingvalue/">Missing Analysis</a>
+                    <a href="/correlationmatrix/">Co-Relations</a>
+                    <a href="/charts">Charts</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Regression</span>
+                <div class="dropdown-content">
+                    <a href="/regression">Regression Models</a>
+                    <a href="/comparativeanalysis">Comparitive Analysis</a>
+                    <a href="/featureimportance">Feature Importance</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Report</span>
+                <div class="dropdown-content">
+                    <a href="/download_report">Generate Report</a>
+                    <a href="{{ url_for('export_data') }}">Export Data</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <span class="dropbtn-text">Settings</span>
+                <div class="dropdown-content">
+                    <!-- <a href="#">User Settings</a> -->
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header-container">
+            <h1 class="h1-head">Feature Engineering</h1>
+            <form action="{{ url_for('transformations') }}" method="POST" id="preprocess-form">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="log-transformation-checkbox" name="log_transformation" {% if log_transformation_checked %}checked{% endif %} value="Log-Transformation">
+                    <label for="log-transformation-checkbox">Log Transformation</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="box-cox-transformation-checkbox" name="box_cox_transformation" {% if box_cox_transformation_checked %}checked{% endif %} value="Box-Cox-Transformation">
+                    <label for="box-cox-transformation-checkbox">Box-Cox Transformation</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="standardization-checkbox" name="standardization" {% if standardization_checked %}checked{% endif %} value="Standardization">
+                    <label for="standardization-checkbox">Standardization</label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="normalization-checkbox" name="normalization" {% if normalization_checked %}checked{% endif %} value="Normalization">
+                    <label for="normalization-checkbox">Normalization</label>
+                </div>
+                <div class="select-container">
+                    <label for="one-hot-column">Select Column for One-Hot Encoding:</label>
+                    <select id="one-hot-column" name="one_hot_column">
+                        <option value="">--Select Column--</option>
+                        {% for column in columns %}
+                            <option value="{{ column }}" {% if column == selected_one_hot_column %}selected{% endif %}>{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="select-container">
+                    <label for="label-column">Select Column for Label Encoding:</label>
+                    <select id="label-column" name="label_column">
+                        <option value="">--Select Column--</option>
+                        {% for column in columns %}
+                            <option value="{{ column }}" {% if column == selected_label_column %}selected{% endif %}>{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="hidden" id="apply-button-clicked" name="apply_button_clicked" value="false">
+                
+            </form>
+        </div>
+    </div>
+    
+    <div class="preprocess-visualization-container">
+        <div class="data-table" id="data-table">
+            {% if df %}
+                {{ df|safe }}
+            {% else %}
+                <p>No data to display.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Add event listeners to checkboxes
+        document.getElementById("log-transformation-checkbox").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+        document.getElementById("box-cox-transformation-checkbox").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+        document.getElementById("standardization-checkbox").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+        document.getElementById("normalization-checkbox").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+        document.getElementById("one-hot-column").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+        document.getElementById("label-column").addEventListener("change", function() {
+            document.getElementById("apply-button-clicked").value = "false";
+            document.getElementById("preprocess-form").submit();
+        });
+    </script>
+</body>
+</html>
